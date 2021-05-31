@@ -1,14 +1,14 @@
 <?php
 
-namespace Core\Event;
+namespace Sirius\Event;
 
 class ListenerService
 {
 
     public array $listeners = [
-        ['class' => 'Core\Event\listeners\RouterListener', 'callbackMethod' => 'onRequest', 'eventName' => EventNames::REQUEST],
-        ['class' => 'Core\Event\listeners\SecurityListener', 'callbackMethod' => 'onRequest', 'eventName' =>  EventNames::REQUEST],
-        ['class' => 'Core\Event\listeners\FirewallListener', 'callbackMethod' => 'onRequest', 'eventName' =>  EventNames::REQUEST]
+        ['class' => 'Sirius\Event\listeners\RouterListener', 'callbackMethod' => 'onRequest', 'eventName' => EventNames::REQUEST],
+        ['class' => 'Sirius\Event\listeners\SecurityListener', 'callbackMethod' => 'onRequest', 'eventName' =>  EventNames::REQUEST],
+        ['class' => 'Sirius\Event\listeners\FirewallListener', 'callbackMethod' => 'onRequest', 'eventName' =>  EventNames::REQUEST]
     ];
 
 

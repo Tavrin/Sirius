@@ -1,21 +1,21 @@
 <?php
 
-namespace Core;
+namespace Sirius;
 
-use Core\controller\ControllerException;
-use Core\database\DatabaseResolver;
-use Core\database\EntityManager;
-use Core\http\Request;
-use Core\http\Response;
-use Core\Event\Dispatcher;
-use Core\Event\EventNames;
-use Core\Event\ListenerService;
-use Core\Event\Events\RequestEvent;
-use Core\Event\Events\ControllerEvent;
-use Core\controller\ControllerResolver;
-use Core\controller\ArgumentsResolver;
-use Core\routing\Router;
-use Core\utils\JsonParser;
+use Sirius\controller\ControllerException;
+use Sirius\database\DatabaseResolver;
+use Sirius\database\EntityManager;
+use Sirius\http\Request;
+use Sirius\http\Response;
+use Sirius\Event\Dispatcher;
+use Sirius\Event\EventNames;
+use Sirius\Event\ListenerService;
+use Sirius\Event\Events\RequestEvent;
+use Sirius\Event\Events\ControllerEvent;
+use Sirius\controller\ControllerResolver;
+use Sirius\controller\ArgumentsResolver;
+use Sirius\routing\Router;
+use Sirius\utils\JsonParser;
 use Exception;
 use RuntimeException;
 use Throwable;
@@ -23,7 +23,7 @@ use Throwable;
 
 /**
  * Class Kernel
- * @package App\core
+ * @package App\Sirius
  */
 class Kernel
 {

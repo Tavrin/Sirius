@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Core;
+namespace Sirius;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-use Core\utils\JsonParser;
+use Sirius\utils\JsonParser;
 
 class CommandManager
 {

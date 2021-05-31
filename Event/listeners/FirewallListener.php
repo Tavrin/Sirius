@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Core\Event\listeners;
+namespace Sirius\Event\listeners;
 
 
-use Core\Event\Dispatcher;
-use Core\Event\Events\RequestEvent;
-use Core\security\Firewall;
+use Sirius\Event\Dispatcher;
+use Sirius\Event\Events\RequestEvent;
+use Sirius\security\Firewall;
 
 class FirewallListener
 {

@@ -1,9 +1,9 @@
 <?php
 
 
-namespace Core\email;
+namespace Sirius\email;
 
-use Core\utils\JsonParser;
+use Sirius\utils\JsonParser;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;

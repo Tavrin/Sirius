@@ -1,9 +1,9 @@
 <?php
 
 
-namespace Core\Event\Events;
+namespace Sirius\Event\Events;
 
-use Core\Kernel;
+use Sirius\Kernel;
 
 class ControllerEvent
 {

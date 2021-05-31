@@ -1,18 +1,18 @@
 <?php
 
 
-namespace Core\controller;
+namespace Sirius\controller;
 
 use App\Entity\User;
 use App\Twig\TwigExtension;
-use Core\database\EntityManager;
-use Core\http\Request;
-use Core\http\Session;
-use Core\security\Security;
-use Core\utils\JsonParser;
+use Sirius\database\EntityManager;
+use Sirius\http\Request;
+use Sirius\http\Session;
+use Sirius\security\Security;
+use Sirius\utils\JsonParser;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
-use Core\http\Response;
+use Sirius\http\Response;
 
 class Controller
 {

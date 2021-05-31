@@ -1,9 +1,9 @@
 <?php
 
 
-namespace Core\database;
+namespace Sirius\database;
 
-use Core\Kernel;
+use Sirius\Kernel;
 use PDO;
 use PDOException;
 use RuntimeException;

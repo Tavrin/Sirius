@@ -1,19 +1,19 @@
 <?php
 
 
-namespace Core\controller;
+namespace Sirius\controller;
 
 
-use Core\database\EntityEnums;
-use Core\database\EntityManager;
-use Core\file\FileException;
-use Core\file\FormFile;
-use Core\FormHandleException;
-use Core\http\Request;
-use Core\http\Session;
-use Core\utils\ArrayUtils;
-use Core\utils\ClassUtils;
-use Core\utils\StringUtils;
+use Sirius\database\EntityEnums;
+use Sirius\database\EntityManager;
+use Sirius\file\FileException;
+use Sirius\file\FormFile;
+use Sirius\FormHandleException;
+use Sirius\http\Request;
+use Sirius\http\Session;
+use Sirius\utils\ArrayUtils;
+use Sirius\utils\ClassUtils;
+use Sirius\utils\StringUtils;
 use DateTime;
 use Exception;
 use Ramsey\Uuid\Uuid;
@@ -52,7 +52,7 @@ class Form
 
     /**
      * Form constructor.
-     * @param \Core\http\Request $request
+     * @param \Sirius\http\Request $request
      * @param object $entity
      * @param Session $session
      * @param array $options

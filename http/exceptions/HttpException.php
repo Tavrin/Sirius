@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Core\http\exceptions;
+namespace Sirius\http\exceptions;
 
 
 class HttpException extends \RuntimeException

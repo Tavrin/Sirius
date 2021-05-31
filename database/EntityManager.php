@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Core\database;
+namespace Sirius\database;
 
 
-use Core\utils\ClassUtils;
-use Core\utils\JsonParser;
+use Sirius\utils\ClassUtils;
+use Sirius\utils\JsonParser;
 
 class EntityManager
 {

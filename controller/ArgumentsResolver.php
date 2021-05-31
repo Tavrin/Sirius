@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Core\controller;
+namespace Sirius\controller;
 
-use Core\controller\resolvers\RequestAttributeResolver;
-use Core\controller\resolvers\RequestResolver;
-use Core\http\Request;
+use Sirius\controller\resolvers\RequestAttributeResolver;
+use Sirius\controller\resolvers\RequestResolver;
+use Sirius\http\Request;
 use ReflectionMethod;
 use function is_array;
 

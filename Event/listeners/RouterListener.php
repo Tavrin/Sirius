@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Core\Event\listeners;
+namespace Sirius\Event\listeners;
 
-use Core\Event\Dispatcher;
-use Core\Event\Events\RequestEvent;
-use Core\routing\Router;
+use Sirius\Event\Dispatcher;
+use Sirius\Event\Events\RequestEvent;
+use Sirius\routing\Router;
 
 class RouterListener
 {

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Core\database;
+namespace Sirius\database;
 
 
 class EntityEnums

@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Core\routing;
+namespace Sirius\routing;
 
-use Core\http\exceptions\NotFoundException;
-use Core\http\Request;
-use Core\utils\JsonParser;
+use Sirius\http\exceptions\NotFoundException;
+use Sirius\http\Request;
+use Sirius\utils\JsonParser;
 use http\Exception;
 
 class Router

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Core\file;
+namespace Sirius\file;
 
 
 use Throwable;

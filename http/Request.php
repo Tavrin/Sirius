@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\http;
+namespace Sirius\http;
 
 /**
  * Class Request

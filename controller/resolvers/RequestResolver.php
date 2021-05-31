@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Core\controller\resolvers;
+namespace Sirius\controller\resolvers;
 
 
-use Core\http\Request;
+use Sirius\http\Request;
 
 class RequestResolver
 {

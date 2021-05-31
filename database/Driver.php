@@ -1,8 +1,8 @@
 <?php
 
-namespace Core\database;
+namespace Sirius\database;
 
-use Core\database\Connection;
+use Sirius\database\Connection;
 
 class Driver
 {

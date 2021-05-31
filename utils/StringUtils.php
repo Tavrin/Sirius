@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Core\utils;
+namespace Sirius\utils;
 
 
 class StringUtils

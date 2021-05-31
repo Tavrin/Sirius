@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Core\http;
+namespace Sirius\http;
 
 
 class StatustTexts

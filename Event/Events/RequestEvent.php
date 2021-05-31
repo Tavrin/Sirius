@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Core\Event\Events;
+namespace Sirius\Event\Events;
 
-use Core\Kernel;
-use Core\http\Request;
+use Sirius\Kernel;
+use Sirius\http\Request;
 
 class RequestEvent
 {

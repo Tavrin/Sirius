@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Core\http;
+namespace Sirius\http;
 
 
-use Core\http\exceptions\SessionException;
+use Sirius\http\exceptions\SessionException;
 
 class Session
 {

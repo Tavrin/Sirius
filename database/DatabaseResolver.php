@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Core\database;
+namespace Sirius\database;
 
 
-use Core\utils\JsonParser;
-use Core\database\EntityManager;
+use Sirius\utils\JsonParser;
+use Sirius\database\EntityManager;
 
 class DatabaseResolver
 {

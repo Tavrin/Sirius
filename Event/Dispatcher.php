@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Core\Event;
+namespace Sirius\Event;
 
 
 class Dispatcher

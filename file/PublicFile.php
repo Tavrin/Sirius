@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Core\file;
+namespace Sirius\file;
 
 
 class PublicFile extends File

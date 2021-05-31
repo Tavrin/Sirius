@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Core\utils;
+namespace Sirius\utils;
 
 
-use Core\database\Repository;
+use Sirius\database\Repository;
 
 class Paginator
 {

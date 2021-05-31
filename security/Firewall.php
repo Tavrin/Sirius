@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Core\security;
+namespace Sirius\security;
 
 
-use Core\http\Request;
-use Core\http\Response;
-use Core\utils\JsonParser;
-use Core\utils\StringUtils;
+use Sirius\http\Request;
+use Sirius\http\Response;
+use Sirius\utils\JsonParser;
+use Sirius\utils\StringUtils;
 
 class Firewall
 {

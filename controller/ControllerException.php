@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Core\controller;
+namespace Sirius\controller;
 
 
 class ControllerException extends \LogicException

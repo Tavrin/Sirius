@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Core\database;
+namespace Sirius\database;
 
 require dirname(__DIR__) . '/../vendor/autoload.php';
 

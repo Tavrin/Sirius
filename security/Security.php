@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Core\security;
+namespace Sirius\security;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Core\http\Session;
-use Core\Kernel;
+use Sirius\http\Session;
+use Sirius\Kernel;
 use Ramsey\Uuid\Uuid;
 
 

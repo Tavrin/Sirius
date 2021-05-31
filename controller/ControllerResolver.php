@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Core\controller;
+namespace Sirius\controller;
 
-use Core\database\EntityManager;
-use Core\http\Request;
+use Sirius\database\EntityManager;
+use Sirius\http\Request;
 
 class ControllerResolver
 {
