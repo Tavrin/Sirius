@@ -34,7 +34,7 @@ class Container
                 throw new \LogicException(sprintf('Cannot auto-detect project dir for kernel of class "%s".', $r->name));
             }
 
-            $dir = \dirname($dir);
+            $dir =  \dirname(\dirname($dir));
             while (!is_file($dir.'/composer.json')) {
                 if ($dir === \dirname($dir)) {
                     break;
