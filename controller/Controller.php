@@ -3,8 +3,6 @@
 
 namespace Sirius\controller;
 
-use App\Entity\User;
-use App\Twig\TwigExtension;
 use Sirius\database\EntityManager;
 use Sirius\http\Request;
 use Sirius\http\Session;
@@ -54,7 +52,9 @@ class Controller
                 'debug' => false
             ]);
         }
-        $this->twig->addExtension(new TwigExtension());
+        if (class_exists(App\Twig\TwigExtension)) {
+            $this->twig->addExtension(new App\Twig\TwigExtension());
+        }
 
     }
     protected function render(string $template = null, array $parameters = [], Response $response = null): Response
@@ -127,7 +127,7 @@ class Controller
         }
     }
 
-    protected function getUser(): ?User
+    protected function getUser()
     {
         return $this->security->getUser();
     }
