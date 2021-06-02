@@ -3,6 +3,7 @@
 
 namespace Sirius\controller;
 
+use Sirius\Container;
 use Sirius\database\EntityManager;
 use Sirius\http\Request;
 use Sirius\http\Session;
@@ -16,11 +17,12 @@ class Controller
 {
     protected const TEMPLATES_DIR = ROOT_DIR . '/templates/';
     protected const CONFIG_DIR = ROOT_DIR . '/config/';
-    protected Environment $twig;
+    protected ?Environment $twig;
 
     protected ?EntityManager $entityManager;
 
     protected Session $session;
+    protected Container $container;
 
     /**
      * @var Request|null
@@ -41,21 +43,8 @@ class Controller
         $this->entityManager = $entityManager;
         $this->session = new Session();
         $this->session->start();
-        $loader = new FilesystemLoader(self::TEMPLATES_DIR);
-        if (isset($_ENV['ENV']) && $_ENV['ENV'] === 'dev') {
-            $this->twig = new Environment($loader, [
-                'debug' => true
-            ]);
-            $this->twig->addExtension(new \Twig\Extension\DebugExtension());
-        } else {
-            $this->twig = new Environment($loader, [
-                'debug' => false
-            ]);
-        }
-        if (class_exists(App\Twig\TwigExtension)) {
-            $this->twig->addExtension(new App\Twig\TwigExtension());
-        }
-
+        $this->container = Container::getInstance();
+        $this->twig = $this->container->getTwig();
     }
     protected function render(string $template = null, array $parameters = [], Response $response = null): Response
     {
@@ -76,6 +65,11 @@ class Controller
         $response->setContent($this->renderContent);
 
         return $response;
+    }
+
+    public function getTwig(): Environment
+    {
+        return $this->twig;
     }
 
     public function setControllerContent($template, $parameters = []): string
