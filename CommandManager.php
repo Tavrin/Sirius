@@ -3,8 +3,9 @@
 
 namespace Sirius;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+require './vendor/autoload.php';
 
+use Composer\Factory;
 use Sirius\utils\JsonParser;
 
 class CommandManager
@@ -13,9 +14,11 @@ class CommandManager
     private array $commandList = [];
     private array $argumentsList = [];
     private array $optionsList = [];
+    protected ?Container $container = null;
 
     public function __construct($command, $arguments)
     {
+        $this->container = Container::getInstance();
         $this->initialize($arguments);
         $this->runCommand($command);
 
@@ -29,6 +32,7 @@ class CommandManager
 
     private function addCommands(): void
     {
+        dd($this->container->getRootPath());
         $commands = JsonParser::parseFile(dirname(__DIR__). '/config/commands.json');
 
         foreach ($commands as $command) {

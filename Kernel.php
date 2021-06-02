@@ -51,8 +51,11 @@ class Kernel
 
     private ?Request $request = null;
 
+    private ?Container $container = null;
+
     public function __construct()
     {
+        $this->container = Container::getInstance();
         $this->setServices();
     }
 

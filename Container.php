@@ -10,19 +10,44 @@ use Twig\Loader\FilesystemLoader;
 
 class Container
 {
-    protected const TEMPLATES_DIR = ROOT_DIR . '/templates/';
-    protected const SERVICES = ROOT_DIR . '\config\services.json';
-
-
     private static ?Container $instance = null;
     private ?array $services = null;
 
+
     private ?Environment $twig = null;
+
+    private ?string $rootPath = null;
 
     private function __construct()
     {
-        $this->services = JsonParser::parseFile(self::SERVICES);
+        $this->setRootDir();
+        $this->services = JsonParser::parseFile($this->rootPath.'/config/services.json');
         $this->setTwig();
+
+    }
+
+    private function setRootDir(): ?string
+    {
+        if (null === $this->rootPath) {
+            $r = new \ReflectionObject($this);
+            if (!is_file($dir = $r->getFileName())) {
+                throw new \LogicException(sprintf('Cannot auto-detect project dir for kernel of class "%s".', $r->name));
+            }
+
+            $dir = $rootDir = \dirname($dir);
+            $dir = \dirname($dir);
+            while (!is_file($dir.'/composer.json')) {
+                dump($dir);
+                if ($dir === \dirname($dir)) {
+                    break;
+                }
+                $dir = \dirname($dir);
+            }
+            $this->rootPath = $dir;
+            define('ROOT_DIR', $dir);
+        }
+
+        return $this->rootPath;
     }
 
     public static function getInstance():Container
@@ -35,9 +60,22 @@ class Container
         return self::$instance;
     }
 
+    public function setRootPath(string $rootPath)
+    {
+        $this->rootPath = $rootPath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRootPath(): string
+    {
+        return $this->rootPath;
+    }
+
     private function setTwig()
     {
-        $loader = new FilesystemLoader(self::TEMPLATES_DIR);
+        $loader = new FilesystemLoader($this->rootPath.'/templates/');
         if (isset($_ENV['ENV']) && $_ENV['ENV'] === 'dev') {
             $this->twig = new Environment($loader, [
                 'debug' => true
