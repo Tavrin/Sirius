@@ -10,18 +10,37 @@ use Sirius\utils\JsonParser;
 class SitemapManager
 {
     public const ROUTER_CONFIG = ROOT_DIR . '/config/routes.json';
-    public const SITEMAP_PATH = ROOT_DIR . '/public/sitemap.xml';
+    public const SITEMAP_PATH = ROOT_DIR . '/public/sitemaptest.xml';
 
-    public function generateStaticRoutes()
+    private ?SeoManager  $seoManager= null;
+
+    public function __construct()
     {
-        $xmlFile = $this->getSitemapFile();
-        $mainNode = $xmlFile->createElement('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">');
-        $xmlFile->appendChild($mainNode);
+        $this->seoManager =  new SeoManager();
+    }
 
+    public function generateStaticRoutes(string $host = null)
+    {
+        if (!$host) {
+            $host = $this->seoManager->getHost();
+        }
+        if (false === $xmlFile = $this->getSitemapFile()) {
+            $xmlFile = $this->setNewSitemap();
+        }
+
+        $xmlFile->formatOutput = true;
+        $xmlFile->preserveWhiteSpace = false;
         $parsedRoutes = JsonParser::parseFile(self::ROUTER_CONFIG);
+        $mainNode = $xmlFile->getElementsByTagName('urlset')[0];
         foreach ($parsedRoutes as $route) {
             if (preg_match('/{(.*?)}/', $route['path'])) {
                 continue;
+            }
+            $route['path'] = $host.$route['path'];
+            foreach ($xmlFile->getElementsByTagName('url')  as $url) {
+                if ($route['path'] === $url->getElementsByTagName('loc')[0]->nodeValue) {
+                    continue 2;
+                }
             }
 
             $nodeField = $xmlFile->createElement('url');
@@ -34,15 +53,25 @@ class SitemapManager
 
     }
 
-    private function getSitemapFile()
+    private function setNewSitemap(): DOMDocument
     {
         $doc = new DOMDocument('1.0', 'utf-8');
-        if (file_exists(self::SITEMAP_PATH)) {
-            dd($doc->load (self::SITEMAP_PATH));
-            return $doc->load (self::SITEMAP_PATH);
-        }
+        $doc->formatOutput = true;
+        $doc->preserveWhiteSpace = false;
+        $mainNode = $doc->createElement('urlset');
+        $doc->appendChild($mainNode);
 
         return $doc;
+    }
+
+    private function getSitemapFile()
+    {
+        if (file_exists(self::SITEMAP_PATH)) {
+            $doc = new DOMDocument('1.0', 'utf-8');
+            return $doc::load (self::SITEMAP_PATH);
+        }
+
+        return false;
     }
 
     public function addToSitemap(string $url, int $priority)

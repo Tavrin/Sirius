@@ -34,4 +34,13 @@ class SeoManager
     {
         return $this->seoConfig;
     }
+
+    public function getHost()
+    {
+        if (isset($this->seoConfig['host'] )) {
+            return $this->seoConfig['host'];
+        }
+
+        return null;
+    }
 }
