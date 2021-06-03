@@ -1,0 +1,27 @@
+{
+    "HelloWorld":
+    {
+        "name": "HelloWorld",
+        "class": "Sirius\\commands\\HelloWorldCommand"
+    },
+    "CreateEntity":
+    {
+        "name": "CreateEntity",
+        "class": "Sirius\\commands\\CreateEntityCommand"
+    },
+    "CreateController":
+    {
+        "name": "CreateController",
+        "class": "Sirius\\commands\\CreateControllerCommand"
+    },
+    "Migrate":
+    {
+        "name": "ExecuteMigration",
+        "class": "Sirius\\commands\\MigrateCommand"
+    },
+    "GenerateSitemap":
+    {
+        "name": "GenerateSitemap",
+        "class": "Sirius\\commands\\GenerateStaticSitemapCommand"
+    }
+}

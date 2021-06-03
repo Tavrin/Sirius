@@ -1,11 +1,9 @@
 <?php
 
-
 namespace Sirius;
 
 require './vendor/autoload.php';
 
-use Composer\Factory;
 use Sirius\utils\JsonParser;
 
 class CommandManager
@@ -16,23 +14,33 @@ class CommandManager
     private array $optionsList = [];
     protected ?Container $container = null;
 
-    public function __construct($command, $arguments)
+    public static function main($command, $arguments)
     {
-        $this->container = Container::getInstance();
-        $this->initialize($arguments);
-        $this->runCommand($command);
-
+        (new static)->initialize($command, $arguments);
     }
 
-    private function initialize(array $arguments): void
+    private function initialize(string $command, array $arguments): void
     {
+        $this->container = Container::getInstance();
         $this->addCommands();
         $this->addParams($arguments);
+        $this->runCommand($command);
     }
 
     private function addCommands(): void
     {
-        $commands = JsonParser::parseFile(ROOT_DIR. '/config/commands.json');
+        $commands = JsonParser::parseFile('./commands/commands.json');
+
+        if (file_exists(ROOT_DIR. '/config/commands.json')) {
+            $userCommands = JsonParser::parseFile(ROOT_DIR . '/config/commands.json');
+            foreach ($userCommands as $name => $command) {
+                if (isset($commands[$name])) {
+                    continue;
+                }
+
+                $commands[$name] = $command;
+            }
+        }
 
         foreach ($commands as $command) {
             $this->commandList[$command['name']] = new $command['class'];
@@ -134,5 +142,5 @@ if (php_sapi_name() == 'cli') {
         $arguments[] = $arg;
     }
 
-    $manager = new CommandManager($commandName, $arguments);
+    CommandManager::main($commandName, $arguments);
 }

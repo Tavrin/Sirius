@@ -3,9 +3,6 @@
 
 namespace Sirius\commands;
 
-define('ROOT_DIR', dirname(__DIR__) . '/../');
-
-
 abstract class Command
 {
     protected const BREAK_KEYWORD = 'stop';

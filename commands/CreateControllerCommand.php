@@ -14,13 +14,6 @@ class CreateControllerCommand extends Command
     protected const CONTROLLER_BASE_NAMESPACE = 'App\\Controller';
 
     private array $routes = [];
-    private bool $setRoute = false;
-
-    public function __construct()
-    {
-        $this->routes = JsonParser::parseFile(self::ROUTES_CONFIG);
-        parent::__construct();
-    }
 
     public function configure()
     {
@@ -33,6 +26,7 @@ class CreateControllerCommand extends Command
 
     public function execute()
     {
+        $this->routes = JsonParser::parseFile(self::ROUTES_CONFIG);
 
         echo 'New Controller' . PHP_EOL . PHP_EOL;
 

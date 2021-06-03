@@ -21,7 +21,9 @@ class Container
     private function __construct()
     {
         $this->setRootDir();
-        $this->services = JsonParser::parseFile($this->rootPath.'/config/services.json');
+        if (file_exists($this->rootPath.'/config/services.json')) {
+            $this->services = JsonParser::parseFile($this->rootPath . '/config/services.json');
+        }
         $this->setTwig();
 
     }
@@ -73,16 +75,19 @@ class Container
 
     private function setTwig()
     {
-        $loader = new FilesystemLoader($this->rootPath.'/templates/');
-        if (isset($_ENV['ENV']) && $_ENV['ENV'] === 'dev') {
-            $this->twig = new Environment($loader, [
-                'debug' => true
-            ]);
-            $this->twig->addExtension(new \Twig\Extension\DebugExtension());
-        } else {
-            $this->twig = new Environment($loader, [
-                'debug' => false
-            ]);
+        if (is_dir($this->rootPath.'/templates/')) {
+            $loader = new FilesystemLoader($this->rootPath . '/templates/');
+
+            if (isset($_ENV['ENV']) && $_ENV['ENV'] === 'dev') {
+                $this->twig = new Environment($loader, [
+                    'debug' => true
+                ]);
+                $this->twig->addExtension(new \Twig\Extension\DebugExtension());
+            } else {
+                $this->twig = new Environment($loader, [
+                    'debug' => false
+                ]);
+            }
         }
 
         $this->setTwigServices();
