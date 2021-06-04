@@ -29,7 +29,7 @@ class CommandManager
 
     private function addCommands(): void
     {
-        $commands = JsonParser::parseFile('./commands/commands.json');
+        $commands = JsonParser::parseFile(__DIR__.'/commands/commands.json');
 
         if (file_exists(ROOT_DIR. '/config/commands.json')) {
             $userCommands = JsonParser::parseFile(ROOT_DIR . '/config/commands.json');
@@ -128,19 +128,4 @@ class CommandManager
 
         exit();
     }
-}
-
-if (php_sapi_name() == 'cli') {
-
-    isset($argv[1]) ? $commandName = $argv[1]:$commandName = CommandManager::HELP_ARGUMENT;
-    $arguments = [];
-    foreach ($argv as $key => $arg) {
-        if ($key < 2) {
-            continue;
-        }
-
-        $arguments[] = $arg;
-    }
-
-    CommandManager::main($commandName, $arguments);
 }

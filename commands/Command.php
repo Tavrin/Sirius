@@ -17,6 +17,9 @@ abstract class Command
      */
     public function __construct()
     {
+        $dotenv = \Dotenv\Dotenv::createImmutable(ROOT_DIR, '.env.local');
+        $dotenv->load();
+
         $this->arguments = [];
         $this->options = [];
         $this->name = null;

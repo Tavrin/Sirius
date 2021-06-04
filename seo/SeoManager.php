@@ -35,6 +35,15 @@ class SeoManager
         return $this->seoConfig;
     }
 
+    public function getSitemapData()
+    {
+        if (isset($this->seoConfig['sitemap'])) {
+            return $this->seoConfig['sitemap'];
+        }
+
+        return null;
+    }
+
     public function getHost()
     {
         if (isset($this->seoConfig['host'] )) {

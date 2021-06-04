@@ -66,12 +66,11 @@ class Kernel
                 $this->setDispatcher();
             }
 
-
             $dispatcher = $this->dispatcher;
             $this->listenerService = new ListenerService($dispatcher);
             $this->listenerService->setListeners();
             $this->argumentResolver = new ArgumentsResolver();
-            $this->entityManager = DatabaseResolver::instantiateManager();
+            $this->entityManager = $this->container->getEntityManager();
             $this->controllerResolver = new ControllerResolver();
         } catch (Exception $e) {
             $this->throwResponse($e);

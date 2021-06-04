@@ -4,6 +4,8 @@
 namespace Sirius;
 
 
+use Sirius\database\DatabaseResolver;
+use Sirius\database\EntityManager;
 use Sirius\utils\JsonParser;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -15,6 +17,7 @@ class Container
 
 
     private ?Environment $twig = null;
+    private ?EntityManager $entityManager = null;
 
     private ?string $rootPath = null;
 
@@ -25,7 +28,6 @@ class Container
             $this->services = JsonParser::parseFile($this->rootPath . '/config/services.json');
         }
         $this->setTwig();
-
     }
 
     private function setRootDir(): ?string
@@ -58,6 +60,19 @@ class Container
         }
 
         return self::$instance;
+    }
+
+    public function getEntityManager(): ?EntityManager
+    {
+        if (!$this->entityManager) {
+            try {
+                $this->entityManager = DatabaseResolver::instantiateManager();
+            } catch (\Exception $e) {
+                throw $e;
+            }
+        }
+
+        return $this->entityManager;
     }
 
     public function setRootPath(string $rootPath)
