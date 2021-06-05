@@ -121,8 +121,6 @@ class Form
     public function addDateTimeInput(string $name, array $options = []): Form
     {
         $options['type'] = 'datetime';
-        $currentDate = date("Y-m-d\TH:i:s");
-        $options['value'] ?? $options['value'] = $currentDate;
         $this->setData(FormEnums::DATETIME, $name, $options);
         return $this;
     }
@@ -214,7 +212,7 @@ class Form
         $options['type'] = 'hidden';
         $this->setData(FormEnums::HIDDEN, $name, $options);
 
-         return $this;
+        return $this;
     }
 
     /**
@@ -537,41 +535,41 @@ class Form
         if ($currentRequest instanceof FormHandleException) {
             $this->errors['request'] = ['error' => $currentRequest, 'status' => true, 'result' => $request];
             return;
+        }
+
+        $this->isSubmitted = true;
+        $filesArray = [];
+
+        foreach ($this->data as $fieldName => $fieldData) {
+            if ('div' === $fieldData['type'] || 'button' === $fieldData['type']) {
+                continue;
             }
-
-            $this->isSubmitted = true;
-            $filesArray = [];
-
-            foreach ($this->data as $fieldName => $fieldData) {
-                if ('div' === $fieldData['type'] || 'button' === $fieldData['type']) {
-                    continue;
-                }
-                if ('file' === $fieldData['type']) {
-                    $newFileData = $this->handleFile($currentRequest->files[$fieldName], $fieldData);
-                    if ($newFileData instanceof FormHandleException){
-                        $this->errors[$fieldName] = ['error' => $newFileData, 'status' => true, 'result' => $currentRequest->files[$fieldName]];
-                        continue;
-                    }
-
-                    $filesArray[$fieldName] = $newFileData;
+            if ('file' === $fieldData['type']) {
+                $newFileData = $this->handleFile($currentRequest->files[$fieldName], $fieldData);
+                if ($newFileData instanceof FormHandleException){
+                    $this->errors[$fieldName] = ['error' => $newFileData, 'status' => true, 'result' => $currentRequest->files[$fieldName]];
                     continue;
                 }
 
-                $this->checkField($fieldName, $fieldData, $currentRequest);
+                $filesArray[$fieldName] = $newFileData;
+                continue;
             }
 
-            foreach ($filesArray as $name => $data) {
-                if ($data){
-                    $this->data[$name]['result'] = new FormFile($data['tmp_name'], $this->data, $data['name'], $data['type'], $data['extension']);
-                }
-            }
+            $this->checkField($fieldName, $fieldData, $currentRequest);
+        }
 
-            if ($this->errors) {
-                $this->setFormError();
-                return;
+        foreach ($filesArray as $name => $data) {
+            if ($data){
+                $this->data[$name]['result'] = new FormFile($data['tmp_name'], $this->data, $data['name'], $data['type'], $data['extension']);
             }
+        }
 
-            $this->isValid = true;
+        if ($this->errors) {
+            $this->setFormError();
+            return;
+        }
+
+        $this->isValid = true;
     }
 
     /**
@@ -762,6 +760,10 @@ class Form
      */
     private function validateAndHydrateEntity(array $fieldData, string $requestField): bool
     {
+        if (isset($fieldData['modifyIfEmpty']) && false === $fieldData['modifyIfEmpty'] && empty($requestField)) {
+            return true;
+        }
+
         $entityName = strtolower(ClassUtils::getClassNameFromObject($fieldData['entity']));
         if (!isset($this->allEntityData[$entityName]['fields'][$fieldData['fieldName']])) {
             return false;
@@ -788,14 +790,11 @@ class Form
 
         if ((EntityEnums::TYPE_ASSOCIATION !== $entityField[EntityEnums::FIELD_TYPE] && $fieldType !== $entityField[EntityEnums::FIELD_TYPE]) ||
             (EntityEnums::TYPE_ASSOCIATION === $entityField[EntityEnums::FIELD_TYPE] && !isset($associatedEntity))) {
+
             return false;
         }
 
         $entityMethod = 'set' . ucfirst($fieldData['fieldName']);
-
-        if (isset($fieldData['modifyIfEmpty']) && false === $fieldData['modifyIfEmpty'] && empty($requestField)) {
-            return true;
-        }
 
         $fieldData['entity']->$entityMethod($associatedEntity ?? $newTypeData);
         return true;
