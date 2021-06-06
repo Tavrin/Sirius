@@ -20,7 +20,7 @@ class FormEnums
             'readonly',
             'size',
             'class',
-            ]
+        ]
     ];
 
     public const TEXTAREA = [
@@ -171,6 +171,7 @@ class FormEnums
         'autofocus',
         'checked',
         'disabled',
+        'required',
         'checked'
     ];
 

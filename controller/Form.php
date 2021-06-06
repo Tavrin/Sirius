@@ -386,7 +386,6 @@ class Form
      */
     protected function setData(array $type, string $name, array $options)
     {
-
         if ($this->session->has('formData') && 'password' !== $type['type']) {
             $formData = $this->session->get('formData');
             if ($this->name === $formData['formName'] && array_key_exists($name, $formData['data'])) {
@@ -424,7 +423,6 @@ class Form
     /**
      * @param array $type
      * @param array $options
-     * @param string $name
      * @return string
      */
     private function setInputOptions(array $type, array $options): string
@@ -445,14 +443,17 @@ class Form
             }
 
             if (in_array($optionName,FormEnums::BOOL_FIELDS)) {
-                $input .= "{$optionName} ";
+                if (false != $option || true == $option) {
+                    $input .= "{$optionName} ";
+                }
+
                 continue;
             }
 
             $input .= $optionName . "=\"{$option}\" ";
         }
 
-        if (!isset($options['required']) || (isset($options['required']) && true === $options['required'])) {
+        if (!isset($options['required'])) {
             $input .= "required ";
         }
 
@@ -549,6 +550,8 @@ class Form
                 if ($newFileData instanceof FormHandleException){
                     $this->errors[$fieldName] = ['error' => $newFileData, 'status' => true, 'result' => $currentRequest->files[$fieldName]];
                     continue;
+                } elseif (null === $newFileData) {
+                    continue;
                 }
 
                 $filesArray[$fieldName] = $newFileData;
@@ -632,6 +635,9 @@ class Form
     {
         $fileError = null;
         if (!is_uploaded_file($currentField['tmp_name'])) {
+            if (false === $fieldData['required']) {
+                return null;
+            }
             return new FormHandleException('file', $currentField['name'], "File [${$currentField['type']}] doesn't exist" );
         }
 
@@ -760,7 +766,7 @@ class Form
      */
     private function validateAndHydrateEntity(array $fieldData, string $requestField): bool
     {
-        if (isset($fieldData['modifyIfEmpty']) && false === $fieldData['modifyIfEmpty'] && empty($requestField)) {
+        if ((isset($fieldData['modifyIfEmpty']) && false === $fieldData['modifyIfEmpty'])||(isset($fieldData['required']) && false === $fieldData['required']) && empty($requestField)) {
             return true;
         }
 
