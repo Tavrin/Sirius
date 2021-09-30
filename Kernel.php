@@ -168,6 +168,7 @@ class Kernel
     public function bootApp(): Container
     {
         $container = $this->container = Container::getInstance();
+        $this->setRootPath();
         $this->setServices();
         return $container;
     }
