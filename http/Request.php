@@ -4,7 +4,6 @@ namespace Sirius\http;
 
 /**
  * Class Request
- * @package App\Config\http
  */
 class Request
 {

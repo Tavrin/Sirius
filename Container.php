@@ -8,6 +8,7 @@ use Sirius\database\DatabaseResolver;
 use Sirius\database\EntityManager;
 use Sirius\utils\JsonParser;
 use Twig\Environment;
+use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 
 class Container
@@ -23,33 +24,10 @@ class Container
 
     private function __construct()
     {
-        $this->setRootDir();
         if (file_exists($this->rootPath.'/config/services.json')) {
             $this->services = JsonParser::parseFile($this->rootPath . '/config/services.json');
         }
         $this->setTwig();
-    }
-
-    private function setRootDir(): ?string
-    {
-        if (null === $this->rootPath) {
-            $r = new \ReflectionObject($this);
-            if (!is_file($dir = $r->getFileName())) {
-                throw new \LogicException(sprintf('Cannot auto-detect project dir for kernel of class "%s".', $r->name));
-            }
-
-            $dir =  \dirname(\dirname($dir));
-            while (!is_file($dir.'/composer.json')) {
-                if ($dir === \dirname($dir)) {
-                    break;
-                }
-                $dir = \dirname($dir);
-            }
-            $this->rootPath = $dir;
-            define('ROOT_DIR', $dir);
-        }
-
-        return $this->rootPath;
     }
 
     public static function getInstance():Container
@@ -62,6 +40,9 @@ class Container
         return self::$instance;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function getEntityManager(): ?EntityManager
     {
         if (!$this->entityManager) {
@@ -75,17 +56,20 @@ class Container
         return $this->entityManager;
     }
 
-    public function setRootPath(string $rootPath)
-    {
-        $this->rootPath = $rootPath;
-    }
-
     /**
      * @return string
      */
     public function getRootPath(): string
     {
         return $this->rootPath;
+    }
+
+    /**
+     * @return Environment|null
+     */
+    public function getTwig(): ?Environment
+    {
+        return $this->twig;
     }
 
     private function setTwig()
@@ -97,7 +81,7 @@ class Container
                 $this->twig = new Environment($loader, [
                     'debug' => true
                 ]);
-                $this->twig->addExtension(new \Twig\Extension\DebugExtension());
+                $this->twig->addExtension(new DebugExtension());
             } else {
                 $this->twig = new Environment($loader, [
                     'debug' => false
@@ -108,6 +92,41 @@ class Container
         $this->setTwigServices();
     }
 
+    /**
+     * @return string
+     */
+    private function setRootPath(): string
+    {
+        if (null === $this->rootPath) {
+            if (defined('ROOT_DIR')) {
+                $this->rootPath = ROOT_DIR;
+                return  $this->rootPath;
+            }
+
+            $r = new \ReflectionObject($this);
+            if (!is_file($dir = $r->getFileName())) {
+                throw new \LogicException(sprintf('Cannot auto-detect project dir for kernel of class "%s".', $r->name));
+            }
+
+            $dir =  \dirname(\dirname($dir));
+            while (!is_file($dir.'/composer.json')) {
+                if ($dir === \dirname($dir)) {
+                    break;
+                }
+                $dir = \dirname($dir);
+            }
+
+            if (!is_file($dir.'/composer.json')) {
+            throw new \LogicException(sprintf('Cannot auto-detect project dir for kernel of class "%s".', $r->name));
+        }
+
+            $this->rootPath = $dir;
+            define('ROOT_DIR', $dir);
+        }
+
+        return $this->rootPath;
+    }
+
     private function setTwigServices()
     {
         if (isset ($this->services['twig']['extensions'])) {
@@ -116,13 +135,5 @@ class Container
                 $this->twig->addExtension(new $class());
             }
         }
-    }
-
-    /**
-     * @return Environment|null
-     */
-    public function getTwig(): ?Environment
-    {
-        return $this->twig;
     }
 }

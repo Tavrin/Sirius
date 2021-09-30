@@ -1,6 +1,9 @@
 #!/usr/bin/env php
 <?php declare(strict_types=1);
 
+use Sirius\CommandManager;
+use Sirius\Kernel;
+
 foreach (array(__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
     if (file_exists($file)) {
         define('SIRIUS_COMPOSER_INSTALL', $file);
@@ -36,5 +39,7 @@ if (php_sapi_name() == 'cli') {
         $arguments[] = $arg;
     }
 
-    Sirius\CommandManager::main($commandName, $arguments);
+    $kernel = new Kernel();
+    $commandManager = new CommandManager($kernel);
+    $commandManager->main($commandName, $arguments);
 }

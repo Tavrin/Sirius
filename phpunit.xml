@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- https://phpunit.de/manual/current/en/appendixes.configuration.html -->
+<phpunit
+         backupGlobals="false"
+         colors="true"
+         bootstrap="vendor/autoload.php">
+
+    <testsuite name="App">
+        <directory suffix="Test.php">./Tests</directory>
+    </testsuite>
+
+    <filter>
+        <whitelist >
+            <directory suffix=".php">.</directory>
+            <exclude>
+                <directory suffix=".php">./vendor</directory>
+            </exclude>
+
+        </whitelist>
+    </filter>
+
+    <logging>
+        <log type="coverage-text" target="php://stdout" showOnlySummary="true"/>
+        <log type="coverage-html" target="build/coverage/phpunit" lowUpperBound="35" highLowerBound="70"/>
+    </logging>
+
+    <php>
+        <ini name="error_reporting" value="-1" />
+    </php>
+</phpunit>

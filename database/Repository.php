@@ -43,18 +43,6 @@ abstract class Repository
         return $this->hydrateEntity($results);
     }
 
-    private function setOptionalStatements(string $statement, string $column = null, string $order = null, int $limit = null, int $offset = 0): string
-    {
-        if (isset($column, $order)) {
-            $statement .= ' ORDER BY ' . $column. ' ' . $order;
-        }
-        if (isset($limit)) {
-            $statement .= ' LIMIT ' . $offset . ',' . $limit;
-        }
-
-        return $statement;
-    }
-
     public function findOneBy(string $row, string $criteria)
     {
         $result = $this->findBy($row, $criteria, null, null,1);
@@ -82,45 +70,6 @@ abstract class Repository
         }
 
         return $entities;
-    }
-
-    private function setProperty($result, $field)
-    {
-        if (!isset($result[$field[EntityEnums::FIELD_NAME]])) {
-            return null;
-        }
-
-        $insertData = $result[$field[EntityEnums::FIELD_NAME]];
-
-        if ($field[EntityEnums::FIELD_TYPE] === EntityEnums::TYPE_DATE) {
-            $insertData = new \DateTime($insertData);
-        }
-
-        if ($field[EntityEnums::FIELD_TYPE] === EntityEnums::TYPE_ASSOCIATION) {
-            $insertData = $this->setAssociation($field, $insertData);
-        }
-
-        if ($field[EntityEnums::FIELD_TYPE] === EntityEnums::TYPE_JSON) {
-            $insertData = json_decode($insertData);
-        }
-
-        if ($field[EntityEnums::FIELD_TYPE] === EntityEnums::TYPE_BOOLEAN || $field[EntityEnums::FIELD_TYPE] === EntityEnums::TYPE_BOOL) {
-            1 == $insertData ? $insertData = true : $insertData =  false;
-        }
-
-        return $insertData;
-    }
-
-    private function setAssociation($field, $insertData)
-    {
-        $repository = $field[EntityEnums::ENTITY_REPOSITORY];
-        $repository = new $repository($this->entityManager);
-        $associatedEntity = $repository->findBy(EntityEnums::ID_FIELD_NAME, $insertData);
-        if (isset($associatedEntity) && !empty($associatedEntity)) {
-            return $associatedEntity[0];
-        } else {
-            return null;
-        }
     }
 
     public function findAll(string $column = null, string $order = null, int $limit = null, int $offset = 0): array
@@ -153,5 +102,69 @@ abstract class Repository
     protected function getEntityName(): string
     {
         return $this->entityName;
+    }
+
+    /**
+     * @param string $statement
+     * @param string|null $column
+     * @param string|null $order
+     * @param int|null $limit
+     * @param int $offset
+     * @return string
+     */
+    private function setOptionalStatements(string $statement, string $column = null, string $order = null, int $limit = null, int $offset = 0): string
+    {
+        if (isset($column, $order)) {
+            $statement .= ' ORDER BY ' . $column. ' ' . $order;
+        }
+        if (isset($limit)) {
+            $statement .= ' LIMIT ' . $offset . ',' . $limit;
+        }
+
+        return $statement;
+    }
+
+    /**
+     * @param $field
+     * @param $insertData
+     * @return mixed|null
+     */
+    private function setAssociation($field, $insertData)
+    {
+        $repository = $field[EntityEnums::ENTITY_REPOSITORY];
+        $repository = new $repository($this->entityManager);
+        $associatedEntity = $repository->findBy(EntityEnums::ID_FIELD_NAME, $insertData);
+        if (isset($associatedEntity) && !empty($associatedEntity)) {
+            return $associatedEntity[0];
+        } else {
+            return null;
+        }
+    }
+
+    private function setProperty($result, $field)
+    {
+        if (!isset($result[$field[EntityEnums::FIELD_NAME]])) {
+            return null;
+        }
+
+        $insertData = $result[$field[EntityEnums::FIELD_NAME]];
+
+        if ($field[EntityEnums::FIELD_TYPE] === EntityEnums::TYPE_DATE) {
+            $insertData = new \DateTime($insertData);
+        }
+
+        if ($field[EntityEnums::FIELD_TYPE] === EntityEnums::TYPE_ASSOCIATION) {
+            $insertData = $this->setAssociation($field, $insertData);
+        }
+
+        if ($field[EntityEnums::FIELD_TYPE] === EntityEnums::TYPE_JSON) {
+            $insertData = json_decode($insertData);
+        }
+
+        if ($field[EntityEnums::FIELD_TYPE] === EntityEnums::TYPE_BOOLEAN || $field[EntityEnums::FIELD_TYPE] === EntityEnums::TYPE_BOOL) {
+            1 == $insertData ? $insertData = true : $insertData =  false;
+        }
+
+        return $insertData;
     }
 }

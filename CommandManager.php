@@ -12,16 +12,27 @@ class CommandManager
     private array $commandList = [];
     private array $argumentsList = [];
     private array $optionsList = [];
+    private Kernel $kernel;
     protected ?Container $container = null;
 
-    public static function main($command, $arguments)
+    public function __construct(Kernel $kernel)
     {
-        (new static)->initialize($command, $arguments);
+        $this->kernel = $kernel;
+        $this->kernel->bootApp();
+    }
+    public function main($command, $arguments)
+    {
+        $this->initialize($command, $arguments);
+    }
+
+    protected function getKernel(): Kernel
+    {
+        return $this->kernel;
     }
 
     private function initialize(string $command, array $arguments): void
     {
-        $this->container = Container::getInstance();
+        $this->container = $this->kernel->getContainer();
         $this->addCommands();
         $this->addParams($arguments);
         $this->runCommand($command);

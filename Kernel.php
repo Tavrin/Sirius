@@ -23,7 +23,7 @@ use Throwable;
 
 /**
  * Class Kernel
- * @package App\Sirius
+ * @package Sirius
  */
 class Kernel
 {
@@ -51,13 +51,9 @@ class Kernel
 
     private ?Request $request = null;
 
-    private ?Container $container = null;
+    private ?string $rootPath = null;
 
-    public function __construct()
-    {
-        $this->container = Container::getInstance();
-        $this->setServices();
-    }
+    protected ?Container $container = null;
 
     public function setServices()
     {
@@ -78,6 +74,38 @@ class Kernel
 
     }
 
+    public function setRootPath(): string
+    {
+        if (null === $this->rootPath) {
+            if (defined('ROOT_DIR')) {
+                $this->rootPath = ROOT_DIR;
+                return  $this->rootPath;
+            }
+
+            $r = new \ReflectionObject($this);
+            if (!is_file($dir = $r->getFileName())) {
+                throw new \LogicException(sprintf('Cannot auto-detect project dir for kernel of class "%s".', $r->name));
+            }
+
+            $dir =  \dirname(\dirname($dir));
+            while (!is_file($dir.'/composer.json')) {
+                if ($dir === \dirname($dir)) {
+                    break;
+                }
+                $dir = \dirname($dir);
+            }
+
+            if (!is_file($dir.'/composer.json')) {
+                throw new \LogicException(sprintf('Cannot auto-detect project dir for kernel of class "%s".', $r->name));
+            }
+
+            $this->rootPath = $dir;
+            define('ROOT_DIR', $dir);
+        }
+
+        return $this->rootPath;
+    }
+
     public function setDispatcher()
     {
         $this->dispatcher = new Dispatcher();
@@ -89,6 +117,7 @@ class Kernel
      */
     public function handleRequest(Request $request):Response
     {
+        $this->container ?? $this->bootApp();
         $this->request = $request;
         try {
             return $this->route($request);
@@ -134,5 +163,21 @@ class Kernel
         $e->getCode() === 404 ? $controllerResponse->setStatusCode(404):$controllerResponse->setStatusCode(500);
         $controllerResponse->send();
         exit();
+    }
+
+    public function bootApp(): Container
+    {
+        $container = $this->container = Container::getInstance();
+        $this->setServices();
+        return $container;
+    }
+
+    public function getContainer(): ?Container
+    {
+        if (null === $this->container) {
+            throw new \LogicException('The container is not initialized, the kernel needs to be booted first');
+        }
+
+        return $this->container;
     }
 }

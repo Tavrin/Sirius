@@ -36,6 +36,12 @@ class Controller
 
     public $renderContent = null;
 
+    /**
+     * Controller constructor.
+     * @param Request|null $request
+     * @param EntityManager|null $entityManager
+     * @throws \Exception
+     */
     public function __construct(Request $request = null, EntityManager $entityManager = null)
     {
         $this->security = new Security();
